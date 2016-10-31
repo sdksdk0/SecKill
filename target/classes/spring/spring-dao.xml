@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:util="http://www.springframework.org/schema/util" xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:tx="http://www.springframework.org/schema/tx" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:p="http://www.springframework.org/schema/p"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/util 
+        http://www.springframework.org/schema/util/spring-util.xsd
+        http://www.springframework.org/schema/aop
+        http://www.springframework.org/schema/aop/spring-aop.xsd
+        http://www.springframework.org/schema/tx
+        http://www.springframework.org/schema/tx/spring-tx.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context.xsd
+        http://www.springframework.org/schema/mvc
+        http://www.springframework.org/schema/mvc/spring-mvc.xsd">
+
+	<context:property-placeholder location="classpath:db.properties" />
+
+	<!-- 与mybatis整合数据源买交给spring容器管理 -->
+	<bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">
+		<property name="driverClass" value="${driver}"/>
+		<property name="jdbcUrl" value="${url}"/>
+		<property name="user" value="zp"/>
+		<property name="password" value="a"/>
+		<property name="maxPoolSize"  value="30"></property>
+		<property name="minPoolSize"  value="10"></property>
+		<property name="autoCommitOnClose"  value="false"></property>
+		<property name="checkoutTimeout"  value="1000"></property>
+		<!-- 获取连接失败重试次数 -->
+		<property name="acquireRetryAttempts"  value="2"></property>
+	</bean>
+	
+	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+	    <property name="dataSource" ref="dataSource"/> <!-- 数据源 -->
+	    <property name="configLocation" value="classpath:myBatis.xml"/> <!-- mybatis映射文件 -->
+	  	<property name="typeAliasesPackage"  value="cn.tf.seckill.entity"></property>
+		<property name="mapperLocations"  value="classpath:mapper/*.xml"></property>
+	</bean>
+	
+	<!-- 配制mybatis映射接口的代理实现 类 ：bean的名字与映射接口名的首字母小写一样 -->
+	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+	    <property name="basePackage" value="cn.tf.seckill.dao"/>
+	    <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"/>
+	</bean>
+</beans>
