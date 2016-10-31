@@ -6,6 +6,9 @@ import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.DigestUtils;
 
 import cn.tf.seckill.dao.SeckillDao;
@@ -19,13 +22,14 @@ import cn.tf.seckill.exception.RepeatKillException;
 import cn.tf.seckill.exception.SeckillCloseException;
 import cn.tf.seckill.exception.SeckillException;
 import cn.tf.seckill.service.SeckillService;
-
+@Service
 public class SeckillServiceImpl implements SeckillService{
 
 	private Logger logger=LoggerFactory.getLogger(this.getClass());
 	
+	@Autowired
 	private SeckillDao  seckillDao;
-	
+	@Autowired
 	private SuccessKillDao successKillDao;
 	//加盐处理
 	private final String slat="xvzbnxsd^&&*)(*()kfmv4165323DGHSBJ";
@@ -58,10 +62,11 @@ public class SeckillServiceImpl implements SeckillService{
 	}
 
 	@Override
+	@Transactional
 	public SeckillExecution executeSeckill(long seckillId, long userPhone,
 			String md5) throws SeckillCloseException, RepeatKillException,
 			SeckillException {
-		if(md5==null || md5.equals(getMD5(seckillId))){
+		if(md5==null || !md5.equals(getMD5(seckillId))){
 			throw new SeckillException("接口验证错误");
 		}
 		
@@ -90,8 +95,6 @@ public class SeckillServiceImpl implements SeckillService{
 			logger.error(e.getMessage(),e);
 			throw new SeckillException("内部异常"+e.getMessage());
 		}
-		
-		
 	}
 	
 	private String getMD5(long seckillId){
