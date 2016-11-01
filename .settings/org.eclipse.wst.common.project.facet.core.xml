@@ -5,4 +5,6 @@
   <installed facet="jst.web" version="3.0"/>
   <installed facet="maven" version="1.0"/>
   <installed facet="wst.jsdt.web" version="1.0"/>
+  <installed facet="jst.jaxrs" version="1.1"/>
+  <installed facet="jst.jsf" version="2.1"/>
 </faceted-project>

@@ -3,7 +3,7 @@ package cn.tf.seckill.entity;
 import java.io.Serializable;
 import java.util.Date;
 
-public class Seckill implements Serializable{
+public class Seckill {
 	
 	private long seckillId;
 	private String name;

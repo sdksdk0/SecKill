@@ -44,4 +44,11 @@
 	    <property name="basePackage" value="cn.tf.seckill.dao"/>
 	    <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"/>
 	</bean>
+	
+	<bean id="redisDao" class="cn.tf.seckill.dao.cache.RedisDao">
+		<constructor-arg index="0" value="115.28.16.234"></constructor-arg>
+        <constructor-arg index="1" value="6379"></constructor-arg>
+	</bean> 
+	
+	
 </beans>
