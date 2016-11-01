@@ -1,3 +1,6 @@
+//存放主要交互逻辑的js代码
+// javascript 模块化(package.类.方法)
+
 var seckill = {
 
     //封装秒杀相关ajax的url
@@ -9,7 +12,7 @@ var seckill = {
             return '/SecKill/seckill/' + seckillId + '/exposer';
         },
         execution: function (seckillId, md5) {
-            return '/SecKill/seckill/' + seckillId + '/' + md5 + '/execute';
+            return '/SecKill/seckill/' + seckillId + '/' + md5 + '/execution';
         }
     },
 

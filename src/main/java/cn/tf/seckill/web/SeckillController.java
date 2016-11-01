@@ -59,42 +59,43 @@ public class SeckillController {
 	    
 	    @RequestMapping(value = "/{seckillId}/exposer", 
 	                    method = RequestMethod.POST,
-	                    produces = {"application/json;charset=utf-8"})
+	                    produces = {"application/json;charset=UTF-8"})
 	    @ResponseBody
-	    public SeckillResult<Exposer> exposer(@PathVariable Long seckillId){
+	    public SeckillResult<Exposer> exposer(@PathVariable("seckillId") Long seckillId){
 	        SeckillResult<Exposer> result;
 	        try {
 	            Exposer exposer = seckillService.exportSeckillUrl(seckillId);
-	            result = new SeckillResult<>(true,exposer);
+	            result = new SeckillResult<Exposer>(true,exposer);
 	        } catch (Exception e) {
-	            result = new SeckillResult<>(false, e.getMessage());
+	            result = new SeckillResult<Exposer>(false, e.getMessage());
 	        }
 	        return result;
 	    }
 	    
-	    @RequestMapping(value = "/{seckillId}/{md5}/execute",
+	    @RequestMapping(value = "/{seckillId}/{md5}/execution",
 	                    method = RequestMethod.POST,
-	                    produces = {"application/json;charset=utf-8"})
+	                    produces = {"application/json;charset=UTF-8"})
 	    @ResponseBody
 	    public SeckillResult<SeckillExecution> execute(@PathVariable("seckillId")Long seckillId,
 	                                                   @PathVariable("md5")String md5, 
-	                                                   @CookieValue(value = "killPhone", required = false)Long userPhone){
-	        if(userPhone == null){
+	                                                   @CookieValue(value = "killPhone", required = false)Long phone){
+	        if(phone == null){
 	            return new SeckillResult<>(false, "未注册");
 	        }
 	        
 	        try {
-	            SeckillExecution execution = seckillService.executeSeckill(seckillId, userPhone, md5);
-	            return new SeckillResult<>(true, execution);
-	        } catch(SeckillCloseException e1){
+	        	 SeckillExecution execution = seckillService.executeSeckillByProcedure(seckillId, phone, md5);
+	            return new SeckillResult<SeckillExecution>(true, execution);
+	        } catch (SeckillCloseException e) {
+	            SeckillExecution execution = new SeckillExecution(seckillId, SeckillStatEnum.REPEAT_KILL);
+	            return new SeckillResult<SeckillExecution>(false, execution);
+	        } catch (RepeatKillException e) {
 	            SeckillExecution execution = new SeckillExecution(seckillId, SeckillStatEnum.END);
-	            return new SeckillResult<>(true, execution);
-	        }catch(RepeatKillException e2){
-	            SeckillExecution execution = new SeckillExecution(seckillId,SeckillStatEnum.REPEAT_KILL);
-	            return new SeckillResult<>(true, execution);
-	        }catch (Exception e) {
+	            return new SeckillResult<SeckillExecution>(false, execution);
+	        } catch (Exception e) {
+	            logger.error(e.getMessage(), e);
 	            SeckillExecution execution = new SeckillExecution(seckillId, SeckillStatEnum.INNER_ERROR);
-	            return new SeckillResult<>(true, execution);
+	            return new SeckillResult<SeckillExecution>(false, execution);
 	        }
 	    }
 	    

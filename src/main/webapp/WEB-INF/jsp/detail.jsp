@@ -4,7 +4,7 @@
 <html>
 <head>
     <title>秒杀详情页</title>
-    <%@include file="common/head.jsp" %>
+    <%@include file="common/header.jsp" %>
 </head>
 <body>
 <div class="container">
@@ -69,15 +69,15 @@
 <%--jQuery countDown倒计时插件--%>
 <script src="http://cdn.bootcss.com/jquery.countdown/2.1.0/jquery.countdown.min.js"></script>
 
-<script src="<%=request.getContextPath() %>/resources/script/seckill.js" type="text/javascript"></script>
+<script src="${pageContext.request.contextPath}/resource/script/seckill.js" type="text/javascript"></script>
 
 <script type="text/javascript">
     $(function () {
         //使用EL表达式传入参数
         seckill.detail.init({
-            seckillId:"${seckill.seckillId}",
-            startTime:"${seckill.startTime.time}",//毫秒
-            endTime:"${seckill.endTime.time}"
+            seckillId:${seckill.seckillId},
+            startTime:${seckill.startTime.time},//毫秒
+            endTime:${seckill.endTime.time}
         });
     })
 </script>
